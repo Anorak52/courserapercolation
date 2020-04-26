@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-public class AlgCoursera {
+public class Percolation {
     private boolean[][] grid; //0 - blocked 1 - open
     private WeightedQuickUnionUF unionfind;
     private WeightedQuickUnionUF unionfindBACK;
@@ -8,7 +8,7 @@ public class AlgCoursera {
     private int n;
     private int numofopensites;
     //create grid
-    public AlgCoursera(int n){
+    public Percolation(int n){
         if (n <= 0)
             throw new java.lang.IllegalArgumentException("Nope, only > 0");
 
@@ -19,7 +19,6 @@ public class AlgCoursera {
                 grid[i][j] = false;
             }
         }
-        this.n = n;
         size = (n*n+2);
         unionfind = new WeightedQuickUnionUF(size); //create two points top and bottom
         unionfindBACK = new WeightedQuickUnionUF(n*n + 1); // one virtual node because of problem back wash
@@ -99,7 +98,7 @@ public class AlgCoursera {
 
 //    // test client (optional)
 //    public static void main(String[] args){
-//        AlgCoursera percolation = new AlgCoursera(4);
+//        Percolation percolation = new Percolation(4);
 //        System.out.println(percolation.percolates());
 //        percolation.open(2, 2);
 //        percolation.open(3, 2);
