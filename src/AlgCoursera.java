@@ -1,12 +1,12 @@
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class AlgCoursera {
     private boolean[][] grid; //0 - blocked 1 - open
     private WeightedQuickUnionUF unionfind;
     private WeightedQuickUnionUF unionfindBACK;
+    private int size;
     private int n;
+    private int numofopensites;
     //create grid
     public AlgCoursera(int n){
         if (n <= 0)
@@ -14,13 +14,13 @@ public class AlgCoursera {
 
         grid = new boolean [n][n]; //initialize by the size
 
-        for (int i =0; i < n; i++){  //set close state
-            for (int j = 0; j < n; j++){
+        for (int i =0; i < n; ++i){  //set close state
+            for (int j = 0; j < n; ++j){
                 grid[i][j] = false;
             }
         }
-
-        int size = (n*n+2);
+        this.n = n;
+        size = (n*n+2);
         unionfind = new WeightedQuickUnionUF(size); //create two points top and bottom
         unionfindBACK = new WeightedQuickUnionUF(n*n + 1); // one virtual node because of problem back wash
 
@@ -37,6 +37,7 @@ public class AlgCoursera {
             throw new IndexOutOfBoundsException();
         // Indexes are from 1 to N while array indexes from 0 to N - 1
         grid[row-1][col-1] = true;
+        numofopensites++;
         int idx = posToIndex(row, col);
 
 
@@ -65,19 +66,55 @@ public class AlgCoursera {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col){
-        return isOpen(row, col) && unionfindBACK.connected(posToIndex(row,col), 0);
+        //return isOpen(i,j) && ufBack.connected(posToIndex(i,j), 0);
+        if (isOpen(row, col)){
+            int indx = posToIndex(row, col);
+            int a = unionfindBACK.find(indx);
+            int b = unionfindBACK.find(0);
+            return a == b;
+        }
+        return false;
     }
 
-    /*// returns the number of open sites
-    public int numberOfOpenSites()*/
+    // returns the number of open sites
+    public int numberOfOpenSites(){
+        return numofopensites;
+    }
 
-    /*// does the system percolate?
-    public boolean percolates()
-*/
-    /*// test client (optional)
-    public static void main(String[] args)*/
+    // does the system percolate?
+    public boolean percolates(){
+        boolean ret = false;
+        if (n == 1){
+            ret = isOpen(1, 1);
+        }
+        else{
+            int set1 = unionfind.find(0);
+            int set2 = unionfind.find(size-1);
+            if (set1 == set2){
+                ret = true;
+            }
+        }
+        return ret;
+    }
 
-    private int posToIndex(int i, int j) {
+//    // test client (optional)
+//    public static void main(String[] args){
+//        AlgCoursera percolation = new AlgCoursera(4);
+//        System.out.println(percolation.percolates());
+//        percolation.open(2, 2);
+//        percolation.open(3, 2);
+//        System.out.println(percolation.percolates());
+//        percolation.open(4, 2);
+//        percolation.open(4, 3);
+//        percolation.open(1, 2);
+//        System.out.println(percolation.percolates());
+//        System.out.println(percolation.isFull(4, 3));
+//        System.out.println(percolation.numberOfOpenSites());
+//        percolation.open(5,3);
+//        System.out.println(percolation.percolates());
+//    }
+
+    private int posToIndex(int i, int j) {  // convert2dTo1dCoord
         return (i - 1) * n + j;
     }
 }
