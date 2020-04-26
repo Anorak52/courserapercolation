@@ -8,13 +8,16 @@ public class PercolationStats {
     private int t;  //repeat the experiment T times;
 
     // perform independent trials on an n-by-n grid
-    public PercolationStats(int n, int trials){
-        if (n <= 0 || trials <= 0)
+    public PercolationStats(int n, int t){
+        if (n <= 0 || t <= 0)
             throw new java.lang.IllegalArgumentException();
 
-        res = new double[trials];
+        this.n = n;
+        this.t = t;
+        res = new double[t];
         Percolation per;
-        for (int step = 0; step < trials; ++step) { //repeat the exp T times
+        double square = n * n;
+        for (int step = 0; step < t; ++step) { //repeat the exp T times
             per = new Percolation(n);
             int i, j, openNum = 0;
             while (!per.percolates()) {
@@ -26,10 +29,8 @@ public class PercolationStats {
                 openNum++;
             }
 
-            res[step] = openNum / (n*n);
+            res[step] = openNum / square;
         }
-
-
     }
 
     // sample mean of percolation threshold
@@ -54,13 +55,7 @@ public class PercolationStats {
 
     // test client (see below)
     public static void main(String[] args){
-//        int n = Integer.parseInt(args[0]);
-//        int t = Integer.parseInt(args[1]);
-//        PercolationStats ps = new PercolationStats(n, t);
-//        StdOut.printf("mean                    = %f%n", ps.mean());
-//        StdOut.printf("stddev                  = %f%n", ps.stddev());
-//        StdOut.printf("95%% confidence interval = %f, %f%n", ps.confidenceLo(), ps.confidenceHi());
-        PercolationStats percolationStats = new PercolationStats(20,100);
+        PercolationStats percolationStats = new PercolationStats(200,100);
 
         System.out.println("mean="+ percolationStats.mean());
         System.out.println("stddev="+ percolationStats.stddev());

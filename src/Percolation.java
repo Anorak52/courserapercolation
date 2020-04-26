@@ -7,6 +7,7 @@ public class Percolation {
     private int size;
     private int n;
     private int numofopensites;
+
     //create grid
     public Percolation(int n){
         if (n <= 0)
@@ -14,12 +15,13 @@ public class Percolation {
 
         grid = new boolean [n][n]; //initialize by the size
 
-        for (int i =0; i < n; ++i){  //set close state
+        for (int i = 0; i < n; ++i){  //set close state
             for (int j = 0; j < n; ++j){
                 grid[i][j] = false;
             }
         }
         size = (n*n+2);
+        this.n = n;
         unionfind = new WeightedQuickUnionUF(size); //create two points top and bottom
         unionfindBACK = new WeightedQuickUnionUF(n*n + 1); // one virtual node because of problem back wash
 
@@ -32,8 +34,9 @@ public class Percolation {
 
 
     public void open(int row, int col){
-        if(row>n || row<1 || col>n || col<1)
+        if(row>n || row<1 || col>n || col<1) {
             throw new IndexOutOfBoundsException();
+        }
         // Indexes are from 1 to N while array indexes from 0 to N - 1
         grid[row-1][col-1] = true;
         numofopensites++;
